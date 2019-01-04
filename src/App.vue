@@ -1,12 +1,19 @@
 <template>
   <div class="App o-container o-container--s o-vertical-spacing o-vertical-spacing--xl">
     <h1>Building a Renderless reCAPTCHA v3 Form Component with Vue.js</h1>
+
+    <FormFeedback/>
   </div>
 </template>
 
 <script>
+import FormFeedback from './components/FormFeedback.vue';
+
 export default {
   name: `App`,
+  components: {
+    FormFeedback,
+  },
 };
 </script>
 
