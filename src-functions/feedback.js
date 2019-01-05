@@ -1,3 +1,15 @@
+import axios from 'axios';
+
+const { RECAPTCHA_SECRET } = process.env;
+const RECAPTCHA_VERIFY_URL = `https://www.google.com/recaptcha/api/siteverify`;
+const RECAPTCHA_SCORE_THRESHOLD = 0.5;
+
+function isHuman(token) {
+  const endpoint = `${RECAPTCHA_VERIFY_URL}?response=${token}&secret=${RECAPTCHA_SECRET}`;
+  return axios.post(endpoint)
+    .then(({ data }) => data.score > RECAPTCHA_SCORE_THRESHOLD);
+}
+
 exports.handler = async (event, context, callback) => {
   try {
     // Do not handle requests if the request
@@ -14,14 +26,17 @@ exports.handler = async (event, context, callback) => {
     const {
       message,
       name,
+      token,
     } = JSON.parse(event.body);
 
-    // This is the place to handle
-    // the submitted data.
-    // For example:
-    // await sendEmail({ message, name });
-    // or
-    // await saveToDb({ message, name });
+    if (await isHuman(token)) {
+      // This is the place to handle
+      // the submitted data.
+      // For example:
+      // await sendEmail({ message, name });
+      // or
+      // await saveToDb({ message, name });
+    }
 
     callback(null, {
       statusCode: 200,
